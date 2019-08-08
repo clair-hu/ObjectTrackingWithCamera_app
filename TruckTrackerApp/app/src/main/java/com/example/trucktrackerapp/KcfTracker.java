@@ -1,5 +1,6 @@
 package com.example.trucktrackerapp;
 
+import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
@@ -13,7 +14,11 @@ import org.opencv.video.BackgroundSubtractorKNN;
 import org.opencv.video.Video;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
+
+//import static org.opencv.core.Core.FONT_HERSHEY_SIMPLEX;
 
 public class KcfTracker {
     private final int mBoxThreshold = 8000;
@@ -135,5 +140,93 @@ public class KcfTracker {
             Imgproc.rectangle(contoursWithBoundingBoxesMat, boundingBox.tl(), boundingBox.br(), new Scalar(0, 255, 0));
             Imgproc.rectangle(inputImageWithBoundingBoxesMat, boundingBox.tl(), boundingBox.br(), new Scalar(0, 255, 0));
         }
+    }
+
+    public Mat getPreviewMat(boolean showGrid) {
+        Mat contoursWithBoundingBoxesMat = Mat.zeros(inputImage.size(), CvType.CV_8UC3);
+        Imgproc.drawContours(contoursWithBoundingBoxesMat, rawContours, -1, new Scalar(255, 255, 255));
+
+        Mat inputImageWithBoundingBoxesMat = inputImage.clone();
+
+        for (Rect boundingBox : filteredBoudingBoxes) {
+            Imgproc.rectangle(contoursWithBoundingBoxesMat, boundingBox.tl(), boundingBox.br(), new Scalar(0, 255, 0));
+            Imgproc.rectangle(inputImageWithBoundingBoxesMat, boundingBox.tl(), boundingBox.br(), new Scalar(0, 255, 0));
+        }
+
+
+        Mat previewMat = generatePreviewMat(2, 4, showGrid, inputImage, rawForegroundMask, cleanedForegroundMask, contoursWithBoundingBoxesMat, inputImageWithBoundingBoxesMat);
+        return previewMat;
+    }
+
+    private Mat generatePreviewMat(final int NUM_ROWS, final int NUM_COLS, boolean showGrid, Mat... mats) {
+
+        int previewFrameWidth = (int) (screen_size.width / NUM_COLS);
+        int previewFrameHeight = (int) (screen_size.height / NUM_ROWS);
+
+        Mat previewMat = new Mat(screen_size, CvType.CV_8UC3);
+
+        Queue<Mat> matList = new LinkedList<>();
+
+        for (Mat previewFrame : mats) {
+            previewFrame = convertMat(previewFrame);
+
+            if (showGrid) {
+                drawGrid(previewFrame, 100);
+            }
+
+            Imgproc.resize(previewFrame, previewFrame, new Size(previewFrameWidth, previewFrameHeight));
+            matList.add(previewFrame);
+        }
+
+        Mat blank = new Mat(new Size(previewFrameWidth, previewFrameHeight), CvType.CV_8UC3, new Scalar(255, 255, 255));
+        for (int row = 0; row < NUM_ROWS; row++) {
+            for (int col = 0; col < NUM_COLS; col++) {
+                Mat previewSubMat = matList.poll();
+                if (previewSubMat != null) {
+                    previewSubMat.copyTo(previewMat.submat(row * previewFrameHeight, (row + 1) * previewFrameHeight, col * previewFrameWidth, (col + 1) * previewFrameWidth));
+                } else {
+                    blank.copyTo(previewMat.submat(row * previewFrameHeight, (row + 1) * previewFrameHeight, col * previewFrameWidth, (col + 1) * previewFrameWidth));
+                }
+            }
+        }
+
+//        //TODO more elelgant & Adaptable way to do labels
+//        String[] labelStrings = {"Source", "Raw Bg", "Cleaned Bg", "Contours", "Bounding Boxes"};
+//        for (int row = 0; row < NUM_ROWS; row++) {
+//            for (int col = 0; col < NUM_COLS && labelStrings.length > row * NUM_COLS + col; col++) {
+//                Imgproc.putText(previewMat, labelStrings[row * NUM_COLS + col],
+//                        new Point(col * previewFrameWidth + 20, row * previewFrameHeight + 100),
+//                        FONT_HERSHEY_SIMPLEX, 2.5, new Scalar(0, 0, 255), 5, Core.FILLED);
+//            }
+//        }
+
+
+
+        return previewMat;
+    }
+
+    private Mat convertMat(Mat img) {
+        Mat returnImg = img.clone();
+        if (returnImg.channels() == 4) {
+            Imgproc.cvtColor(returnImg, returnImg, Imgproc.COLOR_BGRA2BGR);
+        } else if (returnImg.channels() == 3) {
+            //already proper colour-space config
+        } else if (returnImg.channels() == 1) {
+            Imgproc.cvtColor(returnImg, returnImg, Imgproc.COLOR_GRAY2BGR);
+        } else {
+            //TODO output error Invalid image
+        }
+        Imgproc.resize(returnImg,returnImg,new Size(480,360));
+        return returnImg;
+    }
+
+    private void drawGrid(Mat mat, int size) {
+        for (int row = 0; (row += size) < mat.rows(); ) {
+            Imgproc.line(mat, new Point(0, row), new Point(mat.cols(), row), new Scalar(255, 170, 0));
+        }
+        for (int col = 0; (col += size) < mat.cols(); ) {
+            Imgproc.line(mat, new Point(col, 0), new Point(col, mat.rows()), new Scalar(255, 170, 0));
+        }
+        Imgproc.rectangle(mat, new Point(0, 0), new Point(mat.cols() - 1, mat.rows() - 1), new Scalar(0, 0, 255));
     }
 }

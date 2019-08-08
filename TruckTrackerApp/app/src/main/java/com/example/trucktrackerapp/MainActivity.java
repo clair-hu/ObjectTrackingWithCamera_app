@@ -120,8 +120,8 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
 
         // TODO inergrate with KCF tracker
         mKCFTracker.process(inputFrame.rgba());
-        mKCFTracker.drawBoundingBoxes();
-        mRgba = inputFrame.rgba();
+//        mKCFTracker.drawBoundingBoxes();
+        mRgba = mKCFTracker.getPreviewMat(true);
 
 
 //        mRgba = inputFrame.rgba();
