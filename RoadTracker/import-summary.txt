@@ -7,7 +7,6 @@ The following files were *not* copied into the new Gradle project; you
 should evaluate whether these are still needed in your project and if
 so manually move them:
 
-* .DS_Store
 * javadoc/
 * javadoc/allclasses-frame.html
 * javadoc/allclasses-noframe.html
@@ -21,7 +20,6 @@ so manually move them:
 * javadoc/org/opencv/android/
 * javadoc/org/opencv/android/BaseLoaderCallback.html
 * javadoc/org/opencv/android/Camera2Renderer.html
-* javadoc/org/opencv/android/CameraActivity.html
 * javadoc/org/opencv/android/CameraBridgeViewBase.CvCameraViewFrame.html
 * javadoc/org/opencv/android/CameraBridgeViewBase.CvCameraViewListener.html
 * javadoc/org/opencv/android/CameraBridgeViewBase.CvCameraViewListener2.html
@@ -33,7 +31,6 @@ so manually move them:
 * javadoc/org/opencv/android/CameraRenderer.html
 * javadoc/org/opencv/android/FpsMeter.html
 * javadoc/org/opencv/android/InstallCallbackInterface.html
-* javadoc/org/opencv/android/JavaCamera2View.JavaCameraSizeAccessor.html
 * javadoc/org/opencv/android/JavaCamera2View.html
 * javadoc/org/opencv/android/JavaCameraView.JavaCameraSizeAccessor.html
 * javadoc/org/opencv/android/JavaCameraView.html
@@ -120,12 +117,9 @@ so manually move them:
 * javadoc/org/opencv/core/package-summary.html
 * javadoc/org/opencv/core/package-tree.html
 * javadoc/org/opencv/dnn/
-* javadoc/org/opencv/dnn/ClassificationModel.html
-* javadoc/org/opencv/dnn/DetectionModel.html
 * javadoc/org/opencv/dnn/DictValue.html
 * javadoc/org/opencv/dnn/Dnn.html
 * javadoc/org/opencv/dnn/Layer.html
-* javadoc/org/opencv/dnn/Model.html
 * javadoc/org/opencv/dnn/Net.html
 * javadoc/org/opencv/dnn/package-frame.html
 * javadoc/org/opencv/dnn/package-summary.html
@@ -402,12 +396,10 @@ Moved Files:
 Android Gradle projects use a different directory structure than ADT
 Eclipse projects. Here's how the projects were restructured:
 
-* AndroidManifest.xml => opencvAndroidLibrary/src/main/AndroidManifest.xml
-* res/ => opencvAndroidLibrary/src/main/res/
-* src/ => opencvAndroidLibrary/src/main/java/
-* src/.DS_Store => opencvAndroidLibrary/src/main/resources/.DS_Store
-* src/org/.DS_Store => opencvAndroidLibrary/src/main/resources/org/.DS_Store
-* src/org/opencv/engine/OpenCVEngineInterface.aidl => opencvAndroidLibrary/src/main/aidl/org/opencv/engine/OpenCVEngineInterface.aidl
+* AndroidManifest.xml => openjava/src/main/AndroidManifest.xml
+* res/ => openjava/src/main/res/
+* src/ => openjava/src/main/java/
+* src/org/opencv/engine/OpenCVEngineInterface.aidl => openjava/src/main/aidl/org/opencv/engine/OpenCVEngineInterface.aidl
 
 Next Steps:
 -----------
