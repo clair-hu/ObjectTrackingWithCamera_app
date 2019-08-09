@@ -123,19 +123,19 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
 
         ////
-//        // TODO inergrate with KCF tracker
-//        mRgba = inputFrame.rgba();
-        mKCFTracker.process(inputFrame.rgba());
-////        mKCFTracker.drawBoundingBoxes();
-        mRgba = mKCFTracker.getPreviewMat(true);
-        ////
+////        // TODO inergrate with KCF tracker
+////        mRgba = inputFrame.rgba();
+//        mKCFTracker.process(inputFrame.rgba());
+//////        mKCFTracker.drawBoundingBoxes();
+//        mRgba = mKCFTracker.getPreviewMat(true);
+//        ////
 
 //        // TODO Auto-generated method stub
-//        mRgba = inputFrame.rgba();
-//        // Rotate mRgba 90 degrees
-//        Core.transpose(mRgba, mRgbaT);
-//        Imgproc.resize(mRgbaT, mRgbaF, mRgbaF.size(), 0,0, 0);
-//        Core.flip(mRgbaF, mRgba, 1 );
+        mRgba = inputFrame.rgba();
+        // Rotate mRgba 90 degrees
+        Core.transpose(mRgba, mRgbaT);
+        Imgproc.resize(mRgbaT, mRgbaF, mRgbaF.size(), 0,0, 0);
+        Core.flip(mRgbaF, mRgba, 1 );
 
         return mRgba; // This function must return
     }

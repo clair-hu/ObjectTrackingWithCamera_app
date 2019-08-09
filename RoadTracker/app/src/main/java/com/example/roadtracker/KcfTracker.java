@@ -10,7 +10,7 @@ import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.tracking.TrackerKCF;
-import org.opencv.video.BackgroundSubtractorKNN;
+import org.opencv.video.BackgroundSubtractorMOG2;
 import org.opencv.video.Video;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -24,7 +24,7 @@ public class KcfTracker {
     private final int mBoxThreshold = 8000;
     private static final int MAX_TRACKER_AGE = 30;//increase from 20
 
-    private BackgroundSubtractorKNN mBackgroundSubtractor;
+    private BackgroundSubtractorMOG2 mBackgroundSubtractor;
     private final Size screen_size;
     private volatile  Mat inputImage;
     private volatile Mat rawForegroundMask;
@@ -34,7 +34,7 @@ public class KcfTracker {
     private List<CustomKcfTracker> trackers = new ArrayList<>();
 
     public KcfTracker(Size screenSize) {
-        this.mBackgroundSubtractor = Video.createBackgroundSubtractorKNN(500, 16, false);
+        this.mBackgroundSubtractor = Video.createBackgroundSubtractorMOG2(500, 16, false);
         this.screen_size = screenSize;
     }
 
