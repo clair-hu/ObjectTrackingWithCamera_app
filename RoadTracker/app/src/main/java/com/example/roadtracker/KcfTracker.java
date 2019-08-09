@@ -68,6 +68,8 @@ public class KcfTracker {
 
     private void addTrackers(Mat img, List<Rect> bboxes) {
         for(Rect bb : bboxes) {
+//            CustomKcfTracker tracker = new CustomKcfTracker(bb, img);
+//            trackers.add(tracker);
             Rect wholeFrame = new Rect(new Point(-1,-1), new Point(this.inputImage.width()+1, this.inputImage.height()+1));
             if(!wholeFrame.contains(bb.tl()) && !wholeFrame.contains(bb.br())) {
                 boolean isFound = false;
@@ -109,7 +111,7 @@ public class KcfTracker {
         Imgproc.medianBlur(img, img, 75);
         Imgproc.blur(img, img, new Size(5, 5));
         Imgproc.threshold(img, img, 125, 255, Imgproc.THRESH_BINARY);
-//        Imgproc.dilate(img, img, Mat.ones(3, 3, CvType.CV_8UC1));
+        Imgproc.dilate(img, img, Mat.ones(3, 3, CvType.CV_8UC1));
         return img;
     }
 
@@ -204,6 +206,8 @@ public class KcfTracker {
 
         return previewMat;
     }
+
+
 
     private Mat convertMat(Mat img) {
         Mat returnImg = img.clone();
