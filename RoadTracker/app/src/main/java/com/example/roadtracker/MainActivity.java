@@ -135,7 +135,7 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
 
         // Rotate mRgba 90 degrees
         Core.transpose(mRgba, mRgbaT);
-        Imgproc.resize(mRgbaT, mRgbaF, mRgbaF.size(), 0,0, 0);
+//        Imgproc.resize(mRgbaT, mRgbaF, mRgbaF.size(), 0,0, 0);
         Core.flip(mRgbaF, mRgba, 1 );
 
         return mRgba; // This function must return
