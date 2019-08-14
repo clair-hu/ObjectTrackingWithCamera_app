@@ -156,8 +156,9 @@ public class KcfTracker {
         }
 
 
-        Mat previewMat = generatePreviewMat(2, 4, showGrid, inputImage, rawForegroundMask, cleanedForegroundMask, contoursWithBoundingBoxesMat, inputImageWithBoundingBoxesMat);
-        return previewMat;
+//        Mat previewMat = generatePreviewMat(2, 4, showGrid, inputImage, rawForegroundMask, cleanedForegroundMask, contoursWithBoundingBoxesMat, inputImageWithBoundingBoxesMat);
+//        return previewMat;
+        return inputImageWithBoundingBoxesMat;
     }
 
     private Mat generatePreviewMat(final int NUM_ROWS, final int NUM_COLS, boolean showGrid, Mat... mats) {

@@ -1,0 +1,4 @@
+#Tue Aug 13 16:33:17 PDT 2019
+base.0=/Users/clair/dev/ObjectTracking_androidApplication/RoadTracker/opencvAndroidLibrary/build/intermediates/dex/debug/mergeDexDebug/out
+path.0=classes.dex
+renamed.0=classes.dex
