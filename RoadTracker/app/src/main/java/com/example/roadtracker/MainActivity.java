@@ -22,21 +22,14 @@ import org.opencv.imgproc.Imgproc;
 public class MainActivity extends AppCompatActivity implements CameraBridgeViewBase.CvCameraViewListener2 {
 
     // Used for logging success or failure messages
-    private static final String TAG = "OCVSample::Activity";
+    private static final String TAG = "MainActivity";
 
     // Loads camera view of OpenCV for us to use. This lets us see using OpenCV
     private CameraBridgeViewBase mOpenCvCameraView;
 
-    // Used in Camera selection from menu (when implemented)
-    private boolean mIsJavaCamera = true;
-    private MenuItem mItemSwitchCamera = null;
-
     private KcfTracker mKCFTracker;
 
-    // These variables are used (at the moment) to fix camera orientation from 270degree to 0degree
     Mat mRgba;
-    Mat mRgbaF;
-    Mat mRgbaT;
 
     private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
         @Override
@@ -63,12 +56,12 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
     protected void onCreate(Bundle savedInstanceState) {
         Log.i(TAG, "called onCreate");
         super.onCreate(savedInstanceState);
+
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.show_camera);
+
         mOpenCvCameraView = (JavaCameraView) findViewById(R.id.show_camera_activity_java_surface_view);
-
         mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
-
         mOpenCvCameraView.setCvCameraViewListener(this);
     }
 
@@ -76,8 +69,9 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
     public void onPause()
     {
         super.onPause();
-        if (mOpenCvCameraView != null)
+        if (mOpenCvCameraView != null) {
             mOpenCvCameraView.disableView();
+        }
     }
 
     @Override
@@ -86,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
         super.onResume();
         if (!OpenCVLoader.initDebug()) {
             Log.d(TAG, "Internal OpenCV library not found. Using OpenCV Manager for initialization");
-            OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_3_0_0, this, mLoaderCallback);
+            OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_3_4_0, this, mLoaderCallback);
         } else {
             Log.d(TAG, "OpenCV library found inside package. Using it!");
             mLoaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);
@@ -95,25 +89,16 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
 
     public void onDestroy() {
         super.onDestroy();
-        if (mOpenCvCameraView != null)
+        if (mOpenCvCameraView != null) {
             mOpenCvCameraView.disableView();
+        }
     }
 
     public void onCameraViewStarted(int width, int height) {
-
         mRgba = new Mat(height, width, CvType.CV_8UC4);
-        mRgbaF = new Mat(height, width, CvType.CV_8UC4);
-        mRgbaT = new Mat(width, width, CvType.CV_8UC4);
 
-
-        ////
-        android.graphics.Point size = new android.graphics.Point();
-        getWindowManager().getDefaultDisplay().getSize(size);
-        Size screenSize = new Size(size.x, size.y);
-
+        Size screenSize = new Size(width, height);
         mKCFTracker = new KcfTracker(screenSize);
-        mRgba = null;
-        ////
     }
 
     public void onCameraViewStopped() {
@@ -121,24 +106,15 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
     }
 
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
+        mRgba = inputFrame.rgba();
+        Size prev_mRgba_size = mRgba.size();
+        Core.transpose(mRgba, mRgba);
+        Imgproc.resize(mRgba, mRgba, prev_mRgba_size, 0,0, 0);
+        Core.flip(mRgba, mRgba, 1 );
 
-        ////
-//        // TODO inergrate with KCF tracker
-//        mRgba = inputFrame.rgba();
-        mKCFTracker.process(inputFrame.rgba());
-////        mKCFTracker.drawBoundingBoxes();
+        mKCFTracker.process(mRgba);
         mRgba = mKCFTracker.getPreviewMat(true);
-        ////
 
-//        // TODO Auto-generated method stub
-//        mRgba = inputFrame.rgba();
-
-        // Rotate mRgba 90 degrees
-//        Core.transpose(mRgba, mRgbaT);
-//        Imgproc.resize(mRgbaT, mRgbaF, mRgbaF.size(), 0,0, 0);
-//        Core.flip(mRgbaF, mRgba, 1 );
-
-        return mRgba; // This function must return
+        return mRgba;
     }
-
 }
