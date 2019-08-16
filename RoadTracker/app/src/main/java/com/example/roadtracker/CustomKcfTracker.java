@@ -1,11 +1,15 @@
 package com.example.roadtracker;
 
+import android.util.Log;
+
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
 import org.opencv.core.Rect;
 import org.opencv.core.Rect2d;
 import org.opencv.core.Size;
 import org.opencv.tracking.TrackerKCF;
+
+import static android.content.ContentValues.TAG;
 
 public class CustomKcfTracker {
     //TODO Remove magic Number velocity
@@ -61,6 +65,7 @@ public class CustomKcfTracker {
 //            this.predictTrackerLocation();
         } else {
             Rect2d newBoundingBox = new Rect2d();
+            Log.i(TAG, "################### channel is " + frame.channels());
             boolean foundTracker = this.tracker.update(frame, newBoundingBox);
             if (foundTracker) {
                 this.boundingBox = newBoundingBox;

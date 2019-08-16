@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
     // Loads camera view of OpenCV for us to use. This lets us see using OpenCV
     private CameraBridgeViewBase mOpenCvCameraView;
 
-    private KcfTracker mKCFTracker;
+    private TrackingActivity mTrackingActivity;
 
     Mat mRgba;
 
@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
         mRgba = new Mat(height, width, CvType.CV_8UC4);
 
         Size screenSize = new Size(width, height);
-        mKCFTracker = new KcfTracker(screenSize);
+        mTrackingActivity = new TrackingActivity(screenSize);
     }
 
     public void onCameraViewStopped() {
@@ -111,8 +111,8 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
         Imgproc.resize(mRgba, mRgba, prev_mRgba_size, 0,0, 0);
         Core.flip(mRgba, mRgba, 1 );
 
-        mKCFTracker.process(mRgba);
-        mRgba = mKCFTracker.getPreviewMat(true);
+        mTrackingActivity.process(mRgba);
+        mRgba = mTrackingActivity.getPreviewMat(true);
 
         return mRgba;
     }
