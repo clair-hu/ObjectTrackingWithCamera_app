@@ -36,7 +36,7 @@ public class TrackingActivity {
         this.mBackgroundSubtractor = Bgsegm.createBackgroundSubtractorMOG(200, 5, 0.7, 0);
         this.screen_size = screenSize;
         min_area_size = (int)this.screen_size.area()/16;
-        max_area_size = (int)this.screen_size.area()/4;
+        max_area_size = (int)this.screen_size.area()/5;
     }
 
     public void process(Mat img) {
